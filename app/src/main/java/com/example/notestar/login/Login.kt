@@ -126,6 +126,117 @@ fun LoginScreen(
     }
 }
 
+@Composable
+fun SignUpScreen(
+    loginViewModel: LoginViewModel = hiltViewModel(),
+    onNavToHomePage:() -> Unit,
+    onNavToLoginPage:() -> Unit,
+) {
+    val loginUiState = loginViewModel.loginUIState
+    val isError = loginUiState.signUpError != null
+    val context = LocalContext.current
+
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(
+            text = "Sign Up",
+            style = MaterialTheme.typography.headlineLarge,
+            fontWeight = FontWeight.Black,
+            color = MaterialTheme.colorScheme.primary
+        )
+
+        if (isError) {
+            Text(
+                text = loginUiState.signUpError ?: "unknown error",
+                color = Color.Red,
+            )
+        }
+
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            value = loginUiState.userNameSignUp,
+            onValueChange = { loginViewModel.onUserNameChangeSignup(it) },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Person,
+                    contentDescription = null,
+                )
+            },
+            label = {
+                Text(text = "Email")
+            },
+            isError = isError
+        )
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            value = loginUiState.passwordSignUp,
+            onValueChange = { loginViewModel.onPasswordChangeSignup(it) },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Lock,
+                    contentDescription = null,
+                )
+            },
+            label = {
+                Text(text = "Password")
+            },
+            visualTransformation = PasswordVisualTransformation(),
+            isError = isError
+        )
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            value = loginUiState.confirmPasswordSignUp,
+            onValueChange = { loginViewModel.onConfirmPasswordChange(it) },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Lock,
+                    contentDescription = null,
+                )
+            },
+            label = {
+                Text(text = "Confirm Password")
+            },
+            visualTransformation = PasswordVisualTransformation(),
+            isError = isError
+        )
+
+        Button(onClick = { loginViewModel.createUser(context) }) {
+            Text(text = "Sign In")
+        }
+        Spacer(modifier = Modifier.size(16.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            Text(text = "Already have an Account?")
+            Spacer(modifier = Modifier.size(8.dp))
+            TextButton(onClick = { onNavToLoginPage.invoke() }) {
+                Text(text = "Sign In")
+            }
+
+        }
+
+        if (loginUiState.isLoading) {
+            CircularProgressIndicator()
+        }
+
+        LaunchedEffect(key1 = loginViewModel.hasUser) {
+            if (loginViewModel.hasUser) {
+                onNavToHomePage.invoke()
+            }
+        }
+
+    }
+}
+
 
 @Composable
 fun PreviewLoginScreen(
