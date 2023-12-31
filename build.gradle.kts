@@ -10,5 +10,6 @@ true // Needed to make the Suppress annotation work for the plugins block
 buildscript{
     dependencies{
         classpath(libs.hilt.android.gradle.plugin)
+        classpath (libs.google.services)
     }
 }

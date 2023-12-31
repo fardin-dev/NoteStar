@@ -52,7 +52,7 @@ class LoginViewModel @Inject constructor(
 
 
     fun createUser(context: Context) = viewModelScope.launch {
-        if (validateLoginForm()) {
+        if (validateSignupForm()) {
             loginUIState = loginUIState.copy(isLoading = true)
             if (loginUIState.passwordSignUp == loginUIState.confirmPasswordSignUp) {
                 loginUIState = loginUIState.copy(signUpError = null)
