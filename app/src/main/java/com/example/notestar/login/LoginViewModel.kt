@@ -1,5 +1,7 @@
 package com.example.notestar.login
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -17,7 +19,7 @@ class LoginViewModel @Inject constructor(
 
     val currentUser = repository.currentUser
     val hasUser: Boolean get() = repository.hasUser()
-    private var loginUIState by mutableStateOf(LoginUIState())
+    var loginUIState by mutableStateOf(LoginUIState())
 
     fun onUserNameChange(userName: String) {
         loginUIState = loginUIState.copy(userName = userName)
@@ -47,4 +49,51 @@ class LoginViewModel @Inject constructor(
         loginUIState.userNameSignUp.isNotBlank() &&
                 loginUIState.passwordSignUp.isNotBlank() &&
                 loginUIState.confirmPasswordSignUp.isNotBlank()
+
+
+    fun createUser(context: Context) = viewModelScope.launch {
+        if (validateLoginForm()) {
+            loginUIState = loginUIState.copy(isLoading = true)
+            if (loginUIState.passwordSignUp == loginUIState.confirmPasswordSignUp) {
+                loginUIState = loginUIState.copy(signUpError = null)
+            }
+            repository.createUser(
+                email = loginUIState.userNameSignUp,
+                password = loginUIState.passwordSignUp
+            ) { isSuccess ->
+                if (isSuccess) {
+                    Toast.makeText(context, "Login Successful", Toast.LENGTH_SHORT).show()
+                    loginUIState = loginUIState.copy(isSuccessLogin = true)
+                } else {
+                    Toast.makeText(context, "Login Failed", Toast.LENGTH_SHORT).show()
+                    loginUIState = loginUIState.copy(isSuccessLogin = false)
+                }
+            }
+        } else {
+            Toast.makeText(context, "Login Form Error", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun loginUser(context: Context) = viewModelScope.launch {
+        if (validateLoginForm()) {
+            loginUIState = loginUIState.copy(isLoading = true)
+            loginUIState = loginUIState.copy(loginError = null)
+            repository.loginUser(
+                email = loginUIState.userName,
+                password = loginUIState.password
+            ) { isSuccess ->
+                if (isSuccess) {
+                    Toast.makeText(context, "Login Successful", Toast.LENGTH_SHORT).show()
+                    loginUIState = loginUIState.copy(isSuccessLogin = true)
+                } else {
+                    Toast.makeText(context, "Login Failed", Toast.LENGTH_SHORT).show()
+                    loginUIState = loginUIState.copy(isSuccessLogin = false)
+                }
+            }
+        } else {
+            Toast.makeText(context, "Login Form Error", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
 }
