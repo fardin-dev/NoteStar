@@ -1,6 +1,7 @@
 package com.example.notestar.di
 
 import com.example.notestar.repository.AuthRepository
+import com.example.notestar.repository.StorageRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,8 +14,14 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideRepository(): AuthRepository {
+    fun provideAuthRepository(): AuthRepository {
         return AuthRepository()
+    }
+
+    @Provides
+    @Singleton
+    fun provideStorageRepository(): StorageRepository {
+        return StorageRepository()
     }
 
 }
