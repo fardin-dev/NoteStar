@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.callbackFlow
 
 
 class StorageRepository() {
-    val currentUser = Firebase.auth.currentUser
+    fun currentUser() = Firebase.auth.currentUser
     val hasUser = Firebase.auth.currentUser != null
 
     fun getUserId(): String = Firebase.auth.currentUser?.uid.orEmpty()

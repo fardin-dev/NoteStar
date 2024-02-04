@@ -22,7 +22,7 @@ class DetailViewModel @Inject constructor(
         get() = repository.hasUser
 
     private val user: FirebaseUser?
-        get() = repository.currentUser
+        get() = repository.currentUser()
 
     fun onColorChange(colorIndex: Int) {
         detailUIState = detailUIState.copy(colorIndex = colorIndex)
