@@ -21,7 +21,7 @@ class HomeViewModel @Inject constructor(
 
     val user = repository.currentUser()
 
-    private val hasUser: Boolean
+    val hasUser: Boolean
         get() = repository.hasUser
 
     private val userId: String

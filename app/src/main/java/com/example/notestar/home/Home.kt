@@ -1,5 +1,6 @@
 package com.example.notestar.home
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
@@ -14,8 +15,12 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -31,6 +36,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -66,7 +72,6 @@ fun HomeScreen(
         mutableStateOf(null)
     }
 
-    var scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
@@ -85,7 +90,7 @@ fun HomeScreen(
                         navToLoginPage.invoke()
                     }) {
                         Icon(
-                            imageVector = Icons.Default.ExitToApp,
+                            imageVector = Icons.AutoMirrored.Default.ExitToApp,
                             contentDescription = "Exit to app"
                         )
                     }
@@ -117,6 +122,35 @@ fun HomeScreen(
                             }
                         }
                     }
+                    AnimatedVisibility(visible = openDialog) {
+                        AlertDialog(
+                            onDismissRequest = {
+                                openDialog = false
+                            },
+                            title = { Text(text = "Delete Note?") },
+                            confirmButton = {
+                                Button(
+                                    onClick = {
+                                        selectedNote?.documentId?.let {
+                                            homeViewModel.deleteNote(it)
+                                        }
+                                        openDialog = false
+                                    },
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = Color.Red,
+                                        contentColor = Color.White
+                                    ),
+                                ) {
+                                    Text(text = "Delete")
+                                }
+                            },
+                            dismissButton = {
+                                Button(onClick = { openDialog = false }) {
+                                    Text(text = "Cancel")
+                                }
+                            }
+                        )
+                    }
                 }
 
                 else -> {
@@ -125,6 +159,11 @@ fun HomeScreen(
                             ?: "Unknown error",
                         color = Color.Red
                     )
+                }
+            }
+            LaunchedEffect(key1 = homeViewModel.hasUser){
+                if (!homeViewModel.hasUser){
+                    navToLoginPage.invoke()
                 }
             }
         }
