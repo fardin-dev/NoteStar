@@ -69,7 +69,7 @@ fun HomeScreen(
         mutableStateOf(null)
     }
 
-    LaunchedEffect(key1 = Unit){
+    LaunchedEffect(key1 = Unit) {
         homeViewModel.loadNotes()
     }
 
@@ -160,8 +160,8 @@ fun HomeScreen(
                     )
                 }
             }
-            LaunchedEffect(key1 = homeViewModel.hasUser){
-                if (!homeViewModel.hasUser){
+            LaunchedEffect(key1 = homeViewModel.hasUser) {
+                if (!homeViewModel.hasUser) {
                     navToLoginPage.invoke()
                 }
             }
@@ -206,13 +206,11 @@ fun NoteItem(
                 LocalContentColor provides MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
             ) {
                 Text(
-                    text = formatDate(note.timestamp),
+                    text = note.description,
                     style = MaterialTheme.typography.bodyMedium,
                     overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier
-                        .padding(4.dp)
-                        .align(Alignment.Start),
-                    maxLines = 1,
+                    modifier = Modifier.padding(4.dp),
+                    maxLines = 4,
                 )
             }
 
@@ -222,11 +220,13 @@ fun NoteItem(
                 LocalContentColor provides MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
             ) {
                 Text(
-                    text = note.description,
+                    text = formatDate(note.timestamp),
                     style = MaterialTheme.typography.bodyMedium,
                     overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.padding(4.dp),
-                    maxLines = 4,
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .align(Alignment.Start),
+                    maxLines = 1,
                 )
             }
         }
