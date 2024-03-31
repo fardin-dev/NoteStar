@@ -62,7 +62,7 @@ fun DetailScreen(
     else Icons.Default.Check
 
     LaunchedEffect(key1 = Unit) {
-        if (isFormsNotBlank) {
+        if (isNoteIdNotBlank) {
             detailViewModel.getNote(noteId)
         } else {
             detailViewModel.resetState()
