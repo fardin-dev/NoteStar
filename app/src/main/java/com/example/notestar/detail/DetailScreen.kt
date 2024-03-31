@@ -1,5 +1,6 @@
 package com.example.notestar.detail
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -74,14 +75,16 @@ fun DetailScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         floatingActionButton = {
-            FloatingActionButton(onClick = {
-                if (isNoteIdNotBlank) {
-                    detailViewModel.updateNote(noteId)
-                } else {
-                    detailViewModel.addNote()
+            AnimatedVisibility(visible = isFormsNotBlank) {
+                FloatingActionButton(onClick = {
+                    if (isNoteIdNotBlank) {
+                        detailViewModel.updateNote(noteId)
+                    } else {
+                        detailViewModel.addNote()
+                    }
+                }) {
+                    Icon(imageVector = icon, contentDescription = "fab")
                 }
-            }) {
-                Icon(imageVector = icon, contentDescription = "fab")
             }
         }
 
